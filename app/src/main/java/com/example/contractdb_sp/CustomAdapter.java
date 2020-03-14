@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -19,14 +21,17 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHolder> {
+public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHolder>  implements Filterable {
+
 
 
     private Context context;
     private List<Contract_SD> allContract;
+    List<Contract_SD> copyallContract;//search er jonno copy
     private DatabaseHelper databaseHelper;
 
     public CustomAdapter(Context context, List<Contract_SD> allNotes) {
@@ -34,6 +39,8 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
         this.allContract = allNotes;
         databaseHelper = new DatabaseHelper(context);
         this.context = context;
+
+        copyallContract = new ArrayList<>(allNotes);//search er jonno copy
     }
 
 
@@ -59,34 +66,51 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
             @Override
             public boolean onLongClick(View view) {
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                builder.setTitle("Select Action");
-                builder.setPositiveButton("Update", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
+                androidx.appcompat.app.AlertDialog.Builder builder  = new androidx.appcompat.app.AlertDialog.Builder(context);
 
+                View view1 = LayoutInflater.from(context).inflate(R.layout.custom_operation,null);
+
+                builder.setView(view1);
+
+                final androidx.appcompat.app.AlertDialog alertDialog = builder.create();
+
+
+                TextView updateTextView=view1.findViewById(R.id.customOperationEditId);
+                TextView deleteTextView=view1.findViewById(R.id.customOperationDeleteId);
+                TextView cancelTextView=view1.findViewById(R.id.customOperationCancelId);
+
+                updateTextView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
                         customDialog(position);
+                        alertDialog.dismiss();
 
                     }
                 });
 
-
-                builder.setNegativeButton("Delete", new DialogInterface.OnClickListener() {
+                deleteTextView.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
+                    public void onClick(View v) {
                         int status = databaseHelper.deleteData(allContract.get(position).getId());
                         if (status == 1){
                             allContract.remove(allContract.get(position));
+                            alertDialog.dismiss();
                             notifyDataSetChanged();
                         }else {
-
                         }
+                    }
+                });
+
+                cancelTextView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        alertDialog.dismiss();
 
                     }
                 });
 
-                builder.show();
+                alertDialog.show();
                 return true;
             }
         });
@@ -125,6 +149,53 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
     public int getItemCount() {
         return allContract.size();
     }
+
+
+
+    //SearchView Filterable
+
+    @Override
+    public Filter getFilter() {
+
+        return filterData;
+    }
+    Filter filterData =new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+
+            List<Contract_SD> filterList = new ArrayList<>();
+
+            if (constraint==null || constraint.length()==0){
+                filterList.addAll(copyallContract);
+            }
+            else {
+
+                String value =constraint.toString().toLowerCase().trim();
+
+                for (Contract_SD contract_sd:copyallContract){
+
+                    if (contract_sd.getName().toLowerCase().trim().contains(value)) {
+                        filterList.add(contract_sd);
+                    }
+                }
+
+            }
+
+            FilterResults filterResults = new FilterResults();
+            filterResults.values= filterList;
+            return filterResults;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+
+
+            allContract.clear();
+            allContract.addAll((List)results.values);
+            notifyDataSetChanged();
+
+        }
+    };
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder {

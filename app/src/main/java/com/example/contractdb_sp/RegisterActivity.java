@@ -31,8 +31,7 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-
-
+        this.setTitle("Register");
 
         textViewsignIn = findViewById(R.id.Register_sing_in_ID);
         signUpButton = findViewById(R.id.SingUpID);
@@ -90,6 +89,16 @@ public class RegisterActivity extends AppCompatActivity {
                     }
                 }
 
+            }
+        });
+
+        textViewsignIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(RegisterActivity.this,MainActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
     }

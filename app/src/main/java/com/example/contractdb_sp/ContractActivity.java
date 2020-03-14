@@ -2,10 +2,14 @@ package com.example.contractdb_sp;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,12 +29,15 @@ public class ContractActivity extends AppCompatActivity  {
     DatabaseHelper databaseHelper;
     CustomAdapter adapter;
     List<Contract_SD> dataList;
+    Context context;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contract);
+        this.setTitle("Contract");
+        context=ContractActivity.this;
 
         recyclerView           = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(ContractActivity.this));
@@ -122,5 +129,31 @@ public class ContractActivity extends AppCompatActivity  {
         alertDialog.show();
     }
 
+    // SearchView
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
 
+
+        getMenuInflater().inflate(R.menu.search_menu,menu);
+        MenuItem menuItem =menu.findItem(R.id.searchIcon);
+
+        SearchView searchView =(SearchView) menuItem.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+
+
+
+                adapter.getFilter().filter(newText);
+                return true;
+            }
+        });
+
+        return true;
+    }
 }

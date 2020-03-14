@@ -5,6 +5,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
@@ -29,7 +30,7 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-
+        this.setTitle("Main Page");
 
         sharePrefance=new SharePrefance();
         context =HomeActivity.this;
@@ -55,12 +56,11 @@ public class HomeActivity extends AppCompatActivity {
                 customAlert();
                 return true;
             case R.id.logout_Id :
-
-
-
-/*                Intent logout = new Intent(HomeActivity.this,MainActivity.class);
-                startActivity(logout);
-                Toast.makeText(this, "Logout", Toast.LENGTH_SHORT).show();*/
+                sharePrefance.rememberData(HomeActivity.this,"","");
+                Intent intent =new Intent(HomeActivity.this,MainActivity.class);
+                startActivity(intent);
+                finish();
+                return true;
 
             default:
            return super.onOptionsItemSelected(item);
@@ -68,14 +68,11 @@ public class HomeActivity extends AppCompatActivity {
     }
 
 
-
-
     private void customAlert() {
-
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         LayoutInflater layoutInflater = LayoutInflater.from(context);
-        View view = layoutInflater.inflate(R.layout.custom_verify_password, null);
+        View view = layoutInflater.inflate(R.layout.custom_verify_password,null);
         builder.setView(view);
 
         final AlertDialog alertDialog = builder.create();
@@ -116,7 +113,30 @@ public class HomeActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
+    // BackPress Command
+    @Override
+    public void onBackPressed() {
+
+        AlertDialog.Builder builder=new AlertDialog.Builder(HomeActivity.this);
+        builder.setTitle("Do you want exit  app ?");
+        builder.setMessage("Please enter a option");
 
 
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        builder.setPositiveButton("Exit", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        });
 
+        builder.show();
+    }
 }
+
+

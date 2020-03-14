@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        this.setTitle("Login");
         //Id Find
         loginButton = findViewById(R.id.LoginButton);
         editUserName = findViewById(R.id.login_UserName_Id);
@@ -52,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
             if (editUserName.getText().toString().equals(emailValue) && editPassword.getText().toString().equals(passwordValue)){
                 Intent intent =new Intent(MainActivity.this,HomeActivity.class);
                 startActivity(intent);
+                finish();
             }
         }
         else {
@@ -85,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
                         sharedPreferences.rememberData(MainActivity.this,email,password);
                         Intent intent =new Intent(MainActivity.this,HomeActivity.class);
                         startActivity(intent);
+                        finish();
 
                     }
                     else {
