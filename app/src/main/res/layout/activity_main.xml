@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+>
+
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -46,30 +54,30 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/login_UserName_Id"
-            android:hint="Username"
+            android:hint="Email"
             android:textAllCaps="false"
-            android:textIsSelectable="true"
-
-            android:drawableLeft="@drawable/ic_person"
-            android:padding="10dp">
+            android:layout_margin="5dp"
+            android:drawableLeft="@drawable/ic_email"
+            android:padding="15dp">
 
         </EditText>
 
-        <com.google.android.material.textfield.TextInputEditText
+        <EditText
             android:maxLines="1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/login_Password_Id"
             android:hint="Password"
             android:textAllCaps="false"
-            android:textIsSelectable="true"
             android:drawableLeft="@drawable/ic_lock"
             android:drawablePadding="15dp"
             android:inputType="textPassword"
             android:password="true"
-            android:padding="15dp">
+            android:padding="15dp"
+            android:layout_margin="5dp"
+            >
 
-        </com.google.android.material.textfield.TextInputEditText>
+        </EditText>
 
         <CheckBox
             android:layout_marginLeft="10dp"
@@ -96,6 +104,8 @@
 
 
         <TextView
+
+            android:layout_marginBottom="40dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/createNewAccount"
@@ -110,3 +120,5 @@
     </LinearLayout>
 
 </LinearLayout>
+
+</ScrollView>

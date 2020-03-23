@@ -150,6 +150,7 @@ public class ContractActivity extends AppCompatActivity  {
 
 
                 adapter.getFilter().filter(newText);
+
                 return true;
             }
         });

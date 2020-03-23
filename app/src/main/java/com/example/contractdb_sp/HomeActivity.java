@@ -49,17 +49,15 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
-
         int id  = item.getItemId();
         switch (id){
             case R.id.contactItemId:
                 customAlert();
                 return true;
             case R.id.logout_Id :
-                sharePrefance.rememberData(HomeActivity.this,"","");
-                Intent intent =new Intent(HomeActivity.this,MainActivity.class);
-                startActivity(intent);
-                finish();
+
+                customLogoutAlert();
+
                 return true;
 
             default:
@@ -68,6 +66,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
 
+    // Password Verify alert
     private void customAlert() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -93,6 +92,57 @@ public class HomeActivity extends AppCompatActivity {
                     if (savePassword.equals(password)) {
                         Intent intent = new Intent(HomeActivity.this, ContractActivity.class);
                         startActivity(intent);
+                        alertDialog.dismiss();
+                    } else {
+                        passwordEditText.setError("Enter correct password");
+                    }
+                }
+
+
+            }
+        });
+
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+
+        alertDialog.show();
+    }
+
+
+
+    // LogOut Password Verify alert
+    private void customLogoutAlert() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        LayoutInflater layoutInflater = LayoutInflater.from(context);
+        View view = layoutInflater.inflate(R.layout.custom_verify_password,null);
+        builder.setView(view);
+
+        final AlertDialog alertDialog = builder.create();
+
+        Button okButton = view.findViewById(R.id.okButton);
+        Button cancelButton = view.findViewById(R.id.cancelButton);
+
+        final EditText passwordEditText = view.findViewById(R.id.verifyPassword);
+
+        okButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String password = passwordEditText.getText().toString();
+                String savePassword = sharePrefance.loadPassword(context);
+                if (password.isEmpty()) {
+                    passwordEditText.setError("Enter your password");
+                } else {
+                    if (savePassword.equals(password)) {
+                        sharePrefance.rememberData(HomeActivity.this,"","");
+                        Intent intent =new Intent(HomeActivity.this,MainActivity.class);
+                        startActivity(intent);
+                        alertDialog.dismiss();
+                        finish();
                         alertDialog.dismiss();
                     } else {
                         passwordEditText.setError("Enter correct password");

@@ -1,6 +1,5 @@
 package com.example.contractdb_sp;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -18,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.SimpleDateFormat;
@@ -79,6 +79,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
                 TextView deleteTextView=view1.findViewById(R.id.customOperationDeleteId);
                 TextView cancelTextView=view1.findViewById(R.id.customOperationCancelId);
 
+                // Update Item
                 updateTextView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -88,18 +89,42 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
                     }
                 });
 
+
+                // Delete item
                 deleteTextView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        int status = databaseHelper.deleteData(allContract.get(position).getId());
-                        if (status == 1){
-                            allContract.remove(allContract.get(position));
-                            alertDialog.dismiss();
-                            notifyDataSetChanged();
-                        }else {
-                        }
+
+
+                        androidx.appcompat.app.AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                        builder.setTitle("Delete?");
+                        builder.setMessage("Are you sure??");
+
+                        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+                        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                int status = databaseHelper.deleteData(allContract.get(position).getId());
+                                if (status == 1) {
+                                    allContract.remove(allContract.get(position));
+                                    alertDialog.dismiss();
+                                    notifyDataSetChanged();
+                                }
+
+                            }
+                        });
+
+                        builder.show();
                     }
                 });
+
+
+                // Cancel Item
 
                 cancelTextView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -124,10 +149,13 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
                 String s="tel:"+phoneNumber;
                 Intent intent=new Intent(Intent.ACTION_DIAL);
                 intent.setData(Uri.parse(s));
-                //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
             }
         });
+
+
+
         holder.smsImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -136,7 +164,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
                 intent.setData(Uri.parse("sms:"+number));
                 String myMessage="Hello! How are You ?";
                 intent.putExtra("Sms Body",myMessage);
-                //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
             }
         });
@@ -157,6 +185,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
     @Override
     public Filter getFilter() {
 
+        notifyDataSetChanged();
         return filterData;
     }
     Filter filterData =new Filter() {
@@ -184,6 +213,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
             FilterResults filterResults = new FilterResults();
             filterResults.values= filterList;
             return filterResults;
+
         }
 
         @Override

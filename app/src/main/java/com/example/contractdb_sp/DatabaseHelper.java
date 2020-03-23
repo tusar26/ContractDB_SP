@@ -32,7 +32,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
 
-    //insertdata
+    //insert data
 
     public long insertData(Contract_SD contract_sd){
 
@@ -71,6 +71,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
 
+    // Update Query
     public int updateData(Contract_SD note){
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -84,7 +85,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return status;
     }
 
+
+    // Delete Query
     public int deleteData(int id){
+
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
         int status = sqLiteDatabase.delete(Query.TABLE_NAME,"id=?",new String[]{String.valueOf(id)});
 
