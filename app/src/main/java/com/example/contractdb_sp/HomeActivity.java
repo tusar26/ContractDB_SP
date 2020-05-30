@@ -60,6 +60,13 @@ public class HomeActivity extends AppCompatActivity {
 
                 return true;
 
+            case R.id.Profile_Id :
+
+                Intent intent = new Intent(HomeActivity.this,Main2Activity.class);
+                startActivity(intent);
+
+                return true;
+
             default:
            return super.onOptionsItemSelected(item);
         }

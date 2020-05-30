@@ -3,10 +3,12 @@ package com.example.contractdb_sp;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,8 +38,14 @@ public class ContractActivity extends AppCompatActivity  {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contract);
+
         this.setTitle("Contract");
         context=ContractActivity.this;
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setStatusBarColor(ContextCompat.getColor(this ,R.color.colorAccent));
+        }
 
         recyclerView           = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(ContractActivity.this));
@@ -135,7 +143,7 @@ public class ContractActivity extends AppCompatActivity  {
 
 
         getMenuInflater().inflate(R.menu.search_menu,menu);
-        MenuItem menuItem =menu.findItem(R.id.searchIcon);
+        MenuItem menuItem =menu.findItem(R.id.search);
 
         SearchView searchView =(SearchView) menuItem.getActionView();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
